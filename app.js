@@ -48,9 +48,10 @@ const userRoutes = require('./routes/users');
 const User = require('./models/user');
 
 // II | KONFIGURASI WEBAPP
-// Aktivasi Server
-app.listen(3000, () => {
-    console.log("Server berhasil diaktifkan!");
+// Aktivasi Server -> menggunakan port yang disediakan oleh hosting service, atau default (3000)
+const port = process.env.PORT || "3000";
+app.listen(port, () => {
+    console.log(`Server berhasil diaktifkan pada port ${port}!`);
 })
 // Routing file utama - agar aplikasi dapat dijalankan oleh CLI dari direktori manapun.
 app.set('views', path.join(__dirname, 'views'));
