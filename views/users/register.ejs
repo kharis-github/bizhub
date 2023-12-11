@@ -1,0 +1,24 @@
+<!-- LAMAN REGISTRATION -->
+<% layout('layouts/boilerplate.ejs') %>
+<div class="row">
+    <h1 class="text-center">Register</h1>
+    <div class="col-6 offset-3">
+        <form action="/register" class="validated-form" method="POST">
+            <div class="mb-3">
+                <label class="form-label" for="username">Username: </label>
+                <input class="form-control" type="text" name="username" id="username">
+            </div>
+            <div class="mb-3"> 
+                <label class="form-label" for="email">Email: </label>
+                <input class="form-control" type="email" name="email" id="email">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Password: </label>
+                <input class="form-control" type="password" name="password" id="password">
+            </div>
+            <div class="mb-3 text-center">
+                <button class="btn btn-primary" type="submit">Register</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<% layout('layouts/boilerplate') %>
+<div id="cluster-map"></div>
+<h1>Businesses</h1>
+<form action="/business/filter" method="POST">
+  <div class="row">
+    <div class="mb-3 col-2">
+      <label class="form-label" for="filter">Filter by: </label>
+      <select class="form-select" name="filter" id="filter">
+        <option value="-">All</option>
+        <option value="Kuliner">Kuliner</option>
+        <option value="Fashion dan Kecantikan">Fashion dan Kecantikan</option>
+        <option value="Pendidikan dan Pelatihan">Pendidikan dan Pelatihan</option>
+        <option value="Teknologi dan Kreativitas">Teknologi dan Kreativitas</option>
+        <option value="Pertanian dan Agribisnis">Pertanian dan Agribisnis</option>
+        <option value="Kerajinan Tangan">Kerajinan Tangan</option>
+        <option value="Pariwisata">Pariwisata</option>
+        <option value="Kesehatan dan Kesejahteraan">Kesehatan dan Kesejahteraan</option>
+        <option value="Perdagangan">Perdagangan</option>
+        <option value="Layanan Sosial">Layanan Sosial</option>
+      </select>
+    </div>
+    <div class="mb-3 col-2 mt-auto">
+      <button class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+</form>
+<ul>
+    <% for (let b of businesses) {%>
+        <!-- Data ditampilkan didalam cards -->
+        <div class="card mb-3" style="max-width: 1240px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <a href="/business/<%= b._id %>">
+                  <!-- Tampilkan gambar pertama dari Business. Jika tidak ada, maka tampilkan gambar default -->
+                    <img src="<%= b.images.length>0 ? b.images[0].path : "https://res.cloudinary.com/dmjwsmdwc/image/upload/v1693474377/cld-sample-2.jpg" %>" class="img-fluid rounded-start" alt="...">
+                </a>
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                    <a href="/business/<%= b._id %>">
+                    <h5 class="card-title"><%= b.name %></h5>
+                </a>
+                  <p class="card-text text-muted"><%= b.category %></p>
+                  <p class="card-text"><%= b.description %></p>
+                  <p class="card-text col-6"><u><small class="text-body-secondary"><%= b.kabupaten %>, <b><%= b.provinsi %></b></small></u></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- !cards -->
+        <% } %>
+</ul>
+<!-- script untuk menampilkan cluster map -->
+<script>
+  const mapboxToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const businessData = {features: <%- JSON.stringify(businesses) %>};
+</script>
+<script src="/javascript/clusterMap.js"></script>

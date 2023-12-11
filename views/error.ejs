@@ -1,0 +1,14 @@
+<% layout('layouts/boilerplate') %>
+    <div class="container">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading"><%= err.message %></h4>
+            <p>Sorry ada masalah nih bung...</p>
+            <hr>
+            <p class="mb-0"><%= err.stack %></p>
+        </div>
+        <form action="/business/all" method="get">
+            <div class="text-center">
+                <button class="btn btn-primary">Back to Home Page</button>
+            </div>
+        </form>
+    </div>

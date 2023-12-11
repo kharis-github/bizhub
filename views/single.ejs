@@ -1,0 +1,125 @@
+<% layout('layouts/boilerplate') %>
+<!-- Starability stylesheet -->
+<link rel="stylesheet" type="text/css" href="/stylesheets/starability.css"/>
+<!-- Item Display -->
+<main>
+    <div class="row">
+        <!-- Konten Page -->
+        <div class="col-6">
+            <div class="card">
+                <!-- CAROUSEL SLIDESHOW -->
+                <div id="carouselExample" class="carousel slide">
+                    <!-- Carousel Items: Item pertama diset 'active' -->
+                    <div class="carousel-inner">
+                        <% b.images.forEach((img, i)=>{%>
+                      <div class="carousel-item <%= i === 0 ? 'active' : ''%>">
+                        <img src="<%= img.path %>" class="d-block w-100" alt="404 | Image failed to load.">
+                      </div>
+                      <% }) %>
+                    </div>
+                    <!-- Carousel Controllers: Hanya tampilkan jikalau gambar business lebih dari 1 -->
+                    <% if(b.images.length>1) { %>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                    <% } %>
+                  </div>
+                <div class="card-body">
+                  <h5 class="card-title"><%= b.name %> | <i><small class="text-muted"><%= b.category %></small></i></h5>
+                  <p class="card-text"><%= b.description %></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <% if(b.address.length) {%>
+                        <li class="list-group-item"><%= b.address %></li>
+                    <% } %>
+                    <li class="list-group-item"><%= b.kecamatan %>, <%= b.kabupaten %>, <%= b.provinsi %> <small class="text-body-secondary">| <%= b.postal_code %></small></li>
+                    <li class="list-group-item"><div class="d-inline text-body-secondary">+62 </div><%= b.phone %></li>
+                    <li class="list-group-item"><%= b.website %></li>
+                </ul>
+                
+                <% if(currentUser && b.author._id.equals(currentUser.id)) { %>
+                    <div class="card-body">
+                        <a href="/business/<%= b._id %>/update" class="card-link btn btn-info">Edit</a>
+                        <form class="d-inline" action="/business/<%= b._id %>?_method=DELETE" method="POST">
+                          <button class="btn btn-danger">Delete</button>
+                      </form>
+                      </div>
+                <% } %>
+              </div>
+        </div>
+        <!-- Form meninggalkan review -->
+        <section class="col-6">
+            <!-- Vector Map dari Mapbox -->
+            <div id='map'></div>
+            <h2>Komentar</h2>
+            <hr>
+            <div class="mb-3">
+                <form action="/business/<%= b._id %>/review" method="POST">
+                    <div class="mb-3">
+                        <!-- Starability Rating System -->
+                        <fieldset class="starability-grow">
+                            <legend class="fs-5">Rating: </legend>
+                            <!-- <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" aria-label="No rating." /> -->
+                            <input type="radio" id="first-rate1" name="rating" value="1" checked/>
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="rating" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="rating" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="rating" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="rating" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
+                    </div>
+                    <div class="mb-3 form-floating">
+                        <textarea class="form-control" name="review" id="review" cols="80" rows="6" placeholder="berikan komentar"></textarea>
+                        <label class="form-label" for="review">Berikan komentar...</label>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Submit Review</button>
+                </form>
+            </div>
+            <!-- Daftar Review -->
+            <div class="daftar-review">
+                <% for(let r of b.reviews) { %>
+                <!-- Item Review (dlm Bootstrap Card) -->
+                <div class="card mb-3">
+                    <ul class="list-group list-group-flush">
+                        <!-- Nama user yang memberikan komentar -->
+                        <li class="list-group-item"><h5 class="mb-auto fs-6"><div class="text-body-tertiary d-inline">u/ </div><%= r.author.username %></h5></li>
+                        <!-- Rating stylized using starability -->
+                        <li class="list-group-item">
+                            <p class="starability-result" data-rating="<%= r.rating %>">
+                                Rated: 3 stars
+                            </p>
+                            <p class="mb-auto"><%= r.review %></p>
+                        </li>
+                        <!-- Isi dari review -->
+                        <!-- <li class="list-group-item"></li> -->
+                        <% if(currentUser && r.author._id.equals(currentUser.id)) { %>
+                        <li class="list-group-item">
+                                <form action="/business/<%= b._id %>/review/<%= r._id %>?_method=DELETE" method="POST">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            </li>
+                        <% } %>   
+                    </ul>
+                </div>
+                <% } %>
+            </div>
+        </section>
+    </div>
+</main>
+<!-- Mapbox Script -->
+<!-- Secara dinamis mengembalikan mapbox token untuk digunakan Mapbox Script -->
+<script>
+    const mapboxToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const bizId = '<%=b._id%>';
+</script>
+<script src="/javascript/mapbox.js">
+</script>

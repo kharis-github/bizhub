@@ -1,0 +1,99 @@
+<% layout('layouts/boilerplate') %>
+<!-- FORM -->
+<div class="row">
+    <h1 class="text-center">Edit Business</h1>
+    <div class="col-6 offset-3">
+        <form action="/business/<%= b._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nama Usaha</label>
+                <input class="form-control" type="text" id="name" name="general[name]" value="<%= b.name %>">
+            </div>
+            <div class="mb-3 form-floating">
+                <textarea class="form-control" id="desc" name="general[description]" placeholder="Tempat hangout santuy!"><%= b.description %></textarea>
+                <label for="desc">Deskripsi</label>
+            </div>
+            <div>
+                <label class="form-label" for="cat">Kategori</label>
+                <select class="form-select" name="general[category]" id="cat">
+                    <option value="Kuliner">Kuliner</option>
+                    <option value="Fashion dan Kecantikan">Fashion dan Kecantikan</option>
+                    <option value="Pendidikan dan Pelatihan">Pendidikan dan Pelatihan</option>
+                    <option value="Teknologi dan Kreativitas">Teknologi dan Kreativitas</option>
+                    <option value="Pertanian dan Agribisnis">Pertanian dan Agribisnis</option>
+                    <option value="Kerajinan Tangan">Kerajinan Tangan</option>
+                    <option value="Pariwisata">Pariwisata</option>
+                    <option value="Kesehatan dan Kesejahteraan">Kesehatan dan Kesejahteraan</option>
+                    <option value="Perdagangan">Perdagangan</option>
+                    <option value="Layanan Sosial">Layanan Sosial</option>
+                </select>
+            </div>
+            <div>
+                <h4 class="text-center">Data Lokasi</h4>
+                <div class="mb-3">
+                    <label class="form-label" for="pvs">Provinsi</label>
+                    <select class="form-select" name="lokasi[provinsi]" id="pvs">
+                        <!-- EJS | Data provinsi berdasarkan data yang dikirim dari provinsi.js -->
+                        <option value="-">--Pilih--</option>
+                        <% for(let p of pvs) {%>
+                            <option value="<%= p.name %>">
+                                <%= p.name %>
+                            </option>
+                            <% } %>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="kbpt">Kabupaten</label>
+                    <select class="form-select" name="lokasi[kabupaten]" id="kbpt" disabled>
+                        <!-- OPTION DIISI SECARA DINAMIS -->
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="kcmt">Kecamatan</label>
+                    <select class="form-select" name="lokasi[kecamatan]" id="kcmt" disabled>
+                        <!-- OPTION DIISI SECARA DINAMIS -->
+                    </select>
+                </div>
+                <div class="mb-3 form-floating">
+                    <textarea class="form-control" name="lokasi[address]" id="alamat" placeholder="Jl. Anggrek No. 17 RT 5 RW 6"><%= b.address %></textarea>
+                    <label for="alamat">Alamat</label>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="kode_pos">Kode Pos</label>
+                    <input class="form-control" type="text" id="kode_pos" name="lokasi[postal_code]" value="<%= b.postal_code %>">
+                </div>
+            </div>
+            <div>
+                <h4 class="text-center">Data Kontak</h4>
+                <label class="form-label" for="phone">Nomor Telefon</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">+62</span>
+                    <input class="form-control" type="text" id="phone" name="kontak[phone]" value="<%= b.phone %>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="website">Halaman Website</label>
+                    <input class="form-control" type="text" id="website" name="kontak[website]" placeholder="www.website.com" value="<%= b.website %>">
+                </div>
+            </div>
+            <!-- Upload Image. Ditangani oleh multer -->
+            <div class="mb-3">
+                <label for="image" class="form-label">Upload Foto (boleh lebih dari satu)</label>
+                <input name="image" class="form-control" type="file" id="image" multiple>
+            </div>
+            <!-- Delete Images -->
+            <div class="mb-3">
+                <% b.images.forEach(function(img, i) { %>
+                    <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="404 | Gambar tidak ditemukan.">
+                    <div class="form-check-inline">
+                        <input type="checkbox" id="img-<%=i%>" name="deleteImages[]" value="<%= img.filename %>">
+                    </div>
+                    <label for="image-<%=i%>">Delete?</label>
+                <% }) %>
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Update Business</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Script untuk membuat form lokasi dinamis -->
+<script src="/javascript/lokasiformscript.js"></script>
